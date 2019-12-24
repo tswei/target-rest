@@ -47,7 +47,9 @@ app.get(`/products/:id`, (req, res) => {
     const id = sanitize(req.params.id);
     externalRequest(id).subscribe(response => {
         res.status(response.status);
-        if (response.status < 200 || response.status > 300) {
+        // upstream server response did not show evidence of 300 status codes
+        // no need to account for potential redirects
+        if (response.status < 200 || response.status >= 300) {
             res.send({});
         }
         else {
@@ -86,6 +88,8 @@ app.put(`/products/:id`, (req, res) => {
     if (products.isRetailProduct(json)) {
         externalRequest(id)
             .subscribe(response => {
+                // upstream server response did not show evidence of 300 status codes
+                // no need to account for potential redirects
                 if (response.status < 200 || response.status >= 300) {
                     res.status(409);
                     res.send("ID does not exist in resource");
