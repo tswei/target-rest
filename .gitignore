@@ -1,2 +1,6 @@
+# vs-code
+*.code-workspace
+.vscode/
+
 node_modules/
 dest/

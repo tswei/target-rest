@@ -5,7 +5,7 @@ import * as database from '../database';
 import mongo from 'mongodb';
 
 const port = 8000;
-function localserver(path: string): string {
+function localServer(path: string): string {
     return `http://localhost:${port}/${path}`
 }
 
@@ -13,7 +13,7 @@ const bodySuccess = {
     id: 13860428,
     name: "The Big Lebowski (Blu-ray)",
     current_price: {
-        value: 14.99,
+        value: 12.49,
         currency_code: "USD"
     }
 }
@@ -29,7 +29,7 @@ after('close DB connection', done => {
 describe('GET', () => {
     describe('success', () => {
         it('should return 200 and correct object', done => {
-            request(localserver('products/13860428'), (_err, res, body) => {
+            request(localServer('products/13860428'), (_err, res, body) => {
                 assert.equal(res.statusCode, 200);
                 expect(body).to.equal(JSON.stringify(bodySuccess));
                 done();
@@ -39,7 +39,7 @@ describe('GET', () => {
 
     describe('failure', () => {
         it('should return 404 and empty object if not valid id', done => {
-            request(localserver('products/138604287'), (_err, res, body) => {
+            request(localServer('products/138604287'), (_err, res, body) => {
                 assert.equal(res.statusCode, 404);
                 expect(body).to.equal(JSON.stringify({}));
                 done();
@@ -48,7 +48,7 @@ describe('GET', () => {
 
         it('should return 406 and no body if not valid Accept header', done => {
             let options = {
-                url: localserver('products/13860428'),
+                url: localServer('products/13860428'),
                 headers: {
                     "Accept": "text/xml",
                 },
@@ -72,7 +72,7 @@ describe('PUT', () => {
             let body = JSON.parse(JSON.stringify(bodySuccess));
             body.current_price.value = 9.99;
             body.current_price.currency_code = "EUR";
-            let url = localserver('products/13860428');
+            let url = localServer('products/13860428');
 
             let options = {
                 method: 'put',
@@ -95,7 +95,7 @@ describe('PUT', () => {
 
     describe('failure', () => {
         it('should return 415 and no body if not valid Content-Type header', done => {
-            let url = localserver('products/13860428');
+            let url = localServer('products/13860428');
 
             let options = {
                 method: 'put',
@@ -120,7 +120,7 @@ describe('PUT', () => {
             let body = JSON.parse(JSON.stringify(bodySuccess));
             body.current_price.value = 9.99;
             body.current_price.currency_code = "EUR";
-            let url = localserver('products/138604287');
+            let url = localServer('products/138604287');
 
             let options = {
                 method: 'put',
@@ -144,7 +144,7 @@ describe('PUT', () => {
             let body = JSON.parse(JSON.stringify(bodySuccess));
             body.current_price.value = undefined;
             body.current_price.currency_code = undefined;
-            let url = localserver('products/13860428');
+            let url = localServer('products/13860428');
 
             let options = {
                 method: 'put',

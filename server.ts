@@ -17,7 +17,7 @@ const defaultCurrencyCode = "USD";
 // clear old values from database
 database.resetDB(() => {}, true);
 
-function externalRequest(id: number): rx.Subject<Response> {
+function externalRequest(id: number | string): rx.Subject<Response> {
     const result = new rx.AsyncSubject<Response>();
     const url = `http://redsky.target.com/v2/pdp/tcin/${id}`;
     rx.from(fetch(url)).pipe(first()).subscribe(res => {
